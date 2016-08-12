@@ -1,0 +1,22 @@
+{
+  "name": "AnswerIt",
+  "description": "Boiler plate Q&A site",
+  "scripts": {
+    "postdeploy": "bash ./heroku_post_deploy.sh"
+  },
+  "env": {
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
