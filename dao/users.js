@@ -6,21 +6,21 @@ var Users = function () {
 
 
 /**
- * Get all users 
+ * Get all users
  * @param done Function to call with the results
  */
-Users.getAll = function(done) {
+Users.getAll = function (done) {
     var sql = "SELECT users.*,roles.admin as isAdmin ,roles.name as rolename" +
         " FROM users " +
         " INNER JOIN roles on users.role=roles.id";
 
     dbhelper.query(sql, [],
         function (results) {
-            done( results);
+            done(results);
         },
         function (error) {
             console.log(error);
-            return done( null );
+            return done(null);
         });
 };
 
@@ -29,15 +29,15 @@ Users.getAll = function(done) {
  * @param id ID of the user to get
  * @param done Function to call with the result
  */
-Users.findById = function(id, done) {
+Users.findById = function (id, done) {
     var sql = "SELECT users.*,roles.admin,roles.name as rolename" +
-            " FROM users " +
-            " INNER JOIN roles on users.role=roles.id" +
-            " where users.id=$1 ";
+        " FROM users " +
+        " INNER JOIN roles on users.role=roles.id" +
+        " where users.id=$1 ";
 
-    dbhelper.query( sql, [id],
+    dbhelper.query(sql, [id],
         function (results) {
-            done(null , results[0]);
+            done(null, results[0]);
         },
         function (error) {
             console.log(error);
@@ -50,17 +50,16 @@ Users.findById = function(id, done) {
  * @param username Username of the user to search for
  * @param done Function to call with the result
  */
-Users.findByUsername = function(username, done) {
+Users.findByUsername = function (username, done) {
     var sql = "SELECT u.id, u.username, u.displayName, u.password, u.role FROM users u where u.username=$1";
     var params = [username];
     dbhelper.query(sql, params,
         function (results) {
-        console.log(results);
-            done(null , results[0]);
+            done(null, results[0]);
         },
         function (error) {
             console.log(error);
-            return done( null , null );
+            return done(null, null);
         });
 };
 
@@ -77,16 +76,16 @@ Users.add = function (username, displayName, password, admin, done) {
     var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
 
     var sql = "INSERT INTO users ( username, displayName, password, role) values ( $1 , $2 , $3 ,$4 ) returning id";
-    var params = [ username,displayName,userHash,admin ];
+    var params = [username, displayName, userHash, admin];
 
-    dbhelper.insert( sql, params ,
-        function( result ) {
-            done( result.rows[0].id , null );
+    dbhelper.insert(sql, params,
+        function (result) {
+            done(result.rows[0].id, null);
         },
-        function(error) {
+        function (error) {
             console.log(error);
-            done(null , error );
-        } );
+            done(null, error);
+        });
 };
 
 /**
@@ -97,20 +96,20 @@ Users.add = function (username, displayName, password, admin, done) {
 Users.delete = function (ids, done) {
 
     var params = [];
-    for(var i = 1; i <= ids.length; i++) {
+    for (var i = 1; i <= ids.length; i++) {
         params.push('$' + i);
     }
 
-    var sql = "DELETE FROM USERS WHERE id IN (" +  params.join(',') + "  )";
+    var sql = "DELETE FROM USERS WHERE id IN (" + params.join(',') + "  )";
 
-    dbhelper.query( sql, ids ,
-        function( result ) {
-            done( true );
+    dbhelper.query(sql, ids,
+        function (result) {
+            done(true);
         },
-        function( error ) {
+        function (error) {
             console.log(error);
-            done( false , error );
-        } );
+            done(false, error);
+        });
 };
 
 /**
@@ -129,10 +128,10 @@ Users.update = function (id, displayName, passwordHash, role, done) {
     var sql = "UPDATE users SET displayName=$1, password=$2, role=$3 where id=$4";
 
     dbhelper.query(sql, params,
-        function(result) {
+        function (result) {
             done(true);
         },
-        function(error) {
+        function (error) {
             console.log(error);
             done(false, error);
         });
