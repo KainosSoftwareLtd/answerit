@@ -1,0 +1,39 @@
+
+/* #32213a */
+/* #383b53 */
+/* #66717e */
+/* #d4d6b9 */
+/* #d1caa1 */
+
+
+.header {
+    background-color: #32213a;
+    color: #d1caa1 ;
+    font-weight: 300;
+    line-height: 1.4;
+    margin-bottom: 0.5em;
+    margin-top: 0.2em;
+}
+
+.header-title {
+    align-content: center;
+}
+
+.menu-text, .menu-item a {
+    color: #32213a;
+}
+
+.button {
+    background-color: #32213a;
+    color: #d1caa1 ;
+}
+
+.button:hover {
+    background-color: #66717e;
+}
+
+.log-in-form {
+    /*border: 1px solid #cacaca;*/
+    /*padding: 1rem;*/
+    /*border-radius: 3px;*/
+}
