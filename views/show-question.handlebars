@@ -1,11 +1,23 @@
-<div class="row">
+<div class="row" >
     <div class="large-10 medium-10 columns">
 
-        <h5>{{question.text}}</h5>
+        <small>{{dateFormat question.created "dddd, MMMM do YYYY"}}</small>
+        <h4>
+        <div class="question">{{question.text}}</div>
+        </h4>
 
+        <br>
+        <h5>{{answers.length}} Answer(s)</h5>
+        <hr>
         {{#each answers}}
-            <P>A) {{this.text}}</P>
+            <div class="answer">
+                <small>{{dateFormat this.created "dddd, MMMM do YYYY"}}</small>
+                <P class="an-answer">{{this.text}}</P>
+            </div>
+            <hr>
         {{/each}}
+
+        <p><a href="/question/addanswer/{{question.id}}">Add another answer to this question</a></p>
     </div>
 </div>
 

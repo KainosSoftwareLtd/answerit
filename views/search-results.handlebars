@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="large-10 medium-10 columns">
+
+        <h5>Results</h5>
+
+        {{#each answers}}
+            <div class="answer">
+                <p class="an-answer">[{{this.answer}} matches] :<a href="/question/show/{{this.id}}"> {{this.question}}</a></p>
+            </div>
+        {{else}}
+            <br>
+            <p>No matching entries found :(</p>
+            <a href="/search">Search again</a>
+        {{/each}}
+    </div>
+</div>
+

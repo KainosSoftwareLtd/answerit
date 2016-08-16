@@ -13,6 +13,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var exphbs = require('express-handlebars');
+var hdf = require('handlebars-dateformat');
+
+// This is used for building the search terms
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
 
 // Authentications
 var users = require('./dao/users');
@@ -23,6 +30,7 @@ require('./utils/passport.js');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var question = require('./routes/question');
+var answer = require('./routes/answer');
 
 var AnswerIt = function () {
 
@@ -80,7 +88,14 @@ var AnswerIt = function () {
 
         // Setup Express
         self.app = express();
-        self.app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+        self.app.engine('handlebars',
+            exphbs({
+                helpers: {
+                    dateFormat: hdf
+                },
+                defaultLayout: 'main'
+            }));
+
         self.app.set('view engine', 'handlebars');
 
         self.app.use(cookieParser());
@@ -135,6 +150,7 @@ var AnswerIt = function () {
         self.app.use('/', routes);
         self.app.use('/users', users);
         self.app.use('/question' , question);
+        self.app.use('/answer' , answer);
 
         // catch 404 and forward to error handler
         self.app.use(function (req, res, next) {
@@ -156,6 +172,7 @@ var AnswerIt = function () {
     };
 
 }
+
 
 
 /**

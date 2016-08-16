@@ -1,25 +1,19 @@
 
 <div class="row">
-    <div class="large-8 medium-8 columns">
+    <div class="large-12 medium-12 columns">
 
         <h5>Keyword search</h5>
-        <form>
+        <form action="/search" method="post">
             <div class="row">
                 <div class="large-12 columns">
                     <label>Search words</label>
-                    <input type="text" placeholder="large-12.columns"/>
+                    <input name="keywords" type="text" placeholder="Keywords separated by space"/>
                 </div>
             </div>
             <button type="submit" class="button">Search</button>
         </form>
     </div>
 
-    <div class="large-4 medium-4 columns">
-        <h5>Try one of these buttons:</h5>
-        <p><a href="#" class="button">Simple Button</a><br/>
-            <a href="#" class="success button">Success Btn</a><br/>
-            <a href="#" class="alert button">Alert Btn</a><br/>
-            <a href="#" class="secondary button">Secondary Btn</a></p>
-    </div>
+
 </div>
 

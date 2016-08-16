@@ -19,7 +19,8 @@
     align-content: center;
 }
 
-.menu-text, .menu-item a {
+
+.menu-text a, .menu-item a {
     color: #32213a;
 }
 
@@ -30,4 +31,20 @@
 
 .button:hover {
     background-color: #66717e;
+}
+
+.question {
+    /*background-color: #e6e6e6;*/
+}
+
+.answer {
+    /*background-color: #e6e6e6;*/
+}
+
+.an-answer {
+    white-space: pre-line;
+}
+
+i {
+    font-size: 30px;
 }

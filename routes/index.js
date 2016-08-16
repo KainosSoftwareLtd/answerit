@@ -7,14 +7,13 @@ var router = express.Router();
 
 var question = require('../dao/question');
 var answer = require('../dao/answer');
-var qalink = require('../dao/question_answer_link');
 
 /* Login page */
 router.get('/login', function (req, res, next) {
     res.render('login', {layout: 'unauthenticated'});
 });
 
-/* Accept login request*/
+/* Accept login request */
 router.post('/loginmein', passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
@@ -29,14 +28,34 @@ router.get('/logout', function (req, res) {
 });
 
 /* GET home page. */
-router.get('/', security.isAuthenticated, function (req, res, next) {
-    res.render('index');
-});
+router.get('/', security.isAuthenticated,
+    function (req, res) {
+        var url = req.session.redirect_to;
+        if (url != undefined) {
+            delete req.session.redirect_to;
+            res.redirect(url);
+        }
+        else {
+            res.render('index');
+        }
+    });
 
-/* Search */
+/* GET search page */
 router.get('/search', security.isAuthenticated, function (req, res, next) {
     res.render('search');
 });
 
+/* POST Perform Search */
+router.post('/search', security.isAuthenticated, function (req, res, next) {
+
+    var keywords = sanitizer(req.body.keywords);
+
+    var searchBy = keywords.replaceAll(" ", " | ");
+
+    question.fullQASearch(searchBy, function (answers) {
+        res.render('search-results', {answers: answers});
+    });
+
+});
 
 module.exports = router;

@@ -11,7 +11,7 @@ var Answer = function () {
  */
 Answer.add = function (answer, done) {
 
-    var sql = "INSERT INTO answer ( text ) values ( $1 ) returning id";
+    var sql = "INSERT INTO answer ( text,ti ) values ( $1 ,  to_tsvector('english',$1) ) returning id";
     var params = [answer];
 
     dbhelper.insert(sql, params,
@@ -35,6 +35,26 @@ Answer.getForQuestionId = function (id, done) {
         "where qal.question_id=$1";
 
     var params = [id];
+    dbhelper.query(sql, params,
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.error(error);
+            done(null);
+        });
+}
+
+/**
+ * Perform a full text search using the supplied terms
+ * @param terms
+ * @param done
+ */
+Answer.search = function (terms, done) {
+    var sql = "SELECT id,text from answer where ti @@ to_tsquery($1)";
+
+    console.log(sql);
+    var params = [terms];
     dbhelper.query(sql, params,
         function (results) {
             done(results);

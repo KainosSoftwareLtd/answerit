@@ -12,7 +12,6 @@ var qalink = require('../dao/question_answer_link');
 /* List questions */
 router.get('/list', security.isAuthenticated, function (req, res, next) {
     question.getAll(function (results) {
-        console.log(results);
         res.render('list-questions' , { questions : results} );
     })
 });
@@ -20,12 +19,9 @@ router.get('/list', security.isAuthenticated, function (req, res, next) {
 /* List questions */
 router.get('/show/:questionId', security.isAuthenticated, function (req, res, next) {
     var questionId = sanitizer(req.params.questionId);
-    console.log(questionId);
 
     question.getById(questionId, function (question) {
         answer.getForQuestionId( questionId , function( answers ) {
-            console.log(question);
-            console.log(answers);
             res.render('show-question' , { question : question, answers: answers} );
         })
 
@@ -38,10 +34,20 @@ router.get('/add', security.isAuthenticatedAdmin, function (req, res, next) {
 });
 
 /* Add a question */
+router.get('/addanswer/:questionId', security.isAuthenticatedAdmin, function (req, res, next) {
+    var questionId = sanitizer(req.params.questionId);
+    question.getById(questionId, function (question) {
+        res.render('add-second-answer' , {question: question});
+    });
+
+});
+
+/* Add a question */
 router.post('/add', security.isAuthenticatedAdmin, function (req, res, next) {
 
     var questionText = sanitizer(req.body.question);
     var answerText = sanitizer(req.body.answer);
+
 
     question.add(questionText, function (questionId, qerror) {
         if (null == questionId) {
