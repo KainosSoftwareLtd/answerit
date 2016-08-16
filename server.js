@@ -22,6 +22,7 @@ require('./utils/passport.js');
 // Routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var question = require('./routes/question');
 
 var AnswerIt = function () {
 
@@ -133,6 +134,7 @@ var AnswerIt = function () {
         //
         self.app.use('/', routes);
         self.app.use('/users', users);
+        self.app.use('/question' , question);
 
         // catch 404 and forward to error handler
         self.app.use(function (req, res, next) {

@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="large-8 medium-8 columns">
+
+        <h5>Questions</h5>
+        <ul>
+        {{#each questions}}
+            <li><a href="/question/show/{{this.id}}">{{this.text}}</a></li>
+        {{/each}}
+        </ul>
+
+    </div>
+</div>
+

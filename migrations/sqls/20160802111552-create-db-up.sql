@@ -18,5 +18,5 @@ CREATE TABLE question_tag_link(
 
 CREATE TABLE question_answer_link(
                 id SERIAL PRIMARY KEY,
-                question_id integer references tag(id) ON DELETE CASCADE,
+                question_id integer references question(id) ON DELETE CASCADE,
                 answer_id integer references answer(id) ON DELETE CASCADE );
