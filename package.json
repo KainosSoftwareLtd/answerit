@@ -5,6 +5,13 @@
   "scripts": {
     "start": "node ./server.js"
   },
+  "devDependencies": {},
+  "bundleDependencies": [],
+  "main": "server.js",
+  "engines": {
+    "node": "4.4.6",
+    "npm": "2.15.5"
+  },
   "dependencies": {
     "pg" : "4.1.1",
     "body-parser": "~1.15.1",

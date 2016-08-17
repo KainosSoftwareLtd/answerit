@@ -102,7 +102,14 @@ var AnswerIt = function () {
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({extended: false}));
 
-        // error handlers
+        // Setup the Google Analytics ID if defined
+        self.app.locals.google_id = process.env.GOOGLE_ID || undefined;
+
+        var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
+        self.app.use(session({secret: cookie_key}));
+
+        console.log("GA ID:" + self.app.locals.google_id);
+        console.log("Cookie key:" + cookie_key);
 
         // development error handler
         // will print stacktrace
@@ -127,8 +134,7 @@ var AnswerIt = function () {
             });
         });
 
-        var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
-        self.app.use(session({secret: cookie_key}));
+
 
         self.app.set('layoutsDir', path.join(__dirname, 'views/layouts'));
         self.app.set('views', path.join(__dirname, 'views'));
