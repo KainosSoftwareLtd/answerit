@@ -17,7 +17,7 @@
     "body-parser": "~1.15.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
-    "express": "~4.13.4",
+    "express": "latest",
     "express-session":"latest",
     "sanitize-html": "latest",
     "morgan": "~1.7.0",

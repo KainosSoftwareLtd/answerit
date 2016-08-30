@@ -22,6 +22,7 @@ passport.use(new Strategy(
             if (user.password != userHash) {
                 return cb(null, false, { message: 'Incorrect login'});
             }
+
             return cb(null, user);
         });
     }));

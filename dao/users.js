@@ -10,7 +10,7 @@ var Users = function () {
  * @param done Function to call with the results
  */
 Users.getAll = function (done) {
-    var sql = "SELECT users.*,roles.admin as isAdmin ,roles.name as rolename" +
+    var sql = "SELECT users.*,roles.admin as admin ,roles.name as rolename" +
         " FROM users " +
         " INNER JOIN roles on users.role=roles.id";
 
@@ -30,10 +30,10 @@ Users.getAll = function (done) {
  * @param done Function to call with the result
  */
 Users.findById = function (id, done) {
-    var sql = "SELECT users.*,roles.admin,roles.name as rolename" +
+    var sql = "SELECT users.*,roles.admin as admin,roles.name as rolename" +
         " FROM users " +
         " INNER JOIN roles on users.role=roles.id" +
-        " where users.id=$1 ";
+        " WHERE users.id=$1 ";
 
     dbhelper.query(sql, [id],
         function (results) {
@@ -51,7 +51,10 @@ Users.findById = function (id, done) {
  * @param done Function to call with the result
  */
 Users.findByUsername = function (username, done) {
-    var sql = "SELECT u.id, u.username, u.displayName, u.password, u.role FROM users u where u.username=$1";
+    var sql = "SELECT users.*,roles.admin as admin,roles.name as rolename" +
+        " FROM users " +
+        " INNER JOIN roles on users.role=roles.id " +
+        " WHERE users.username=$1";
     var params = [username];
     dbhelper.query(sql, params,
         function (results) {

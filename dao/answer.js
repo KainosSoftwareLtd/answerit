@@ -65,4 +65,19 @@ Answer.search = function (terms, done) {
         });
 }
 
+Answer.delete = function( answerId, done) {
+    var params = [answerId];
+
+    var sql = "DELETE FROM answer WHERE id = $1";
+
+    dbhelper.query(sql, params,
+        function (result) {
+            done(true);
+        },
+        function (error) {
+            console.error(error);
+            done(false, error);
+        });
+}
+
 module.exports = Answer;

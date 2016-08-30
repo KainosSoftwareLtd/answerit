@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AnswerIt</title>
-    <link rel="stylesheet" href="/css/foundation.css">
+    <link rel="stylesheet" href="/css/foundation.min.css">
     <link rel="stylesheet" href="/css/app.css">
 
     {{#if google_id}}
@@ -31,30 +31,47 @@
 <body>
 <div class="top-bar">
     <div class="top-bar-left">
-        <ul class="dropdown menu" data-dropdown-menu>
+        <ul class="menu">
             <li class="menu-text"><a href="/">AnswerIt</a></li>
             <li class="menu-item"><a href="/search">Search</a></li>
             <li class="menu-item"><a href="/question/list">Browse</a></li>
-            <li class="menu-item"><a href="/question/add">Add</a></li>
-            <li class="menu-item"><a href="/logout">Logout</a></li>
+            {{#if user.canEdit}}
+                <li class="menu-item"><a href="/question/add">Add</a></li>
+            {{/if}}
+
         </ul>
     </div>
-    <div class="top-bar-right">
-        <form action="/search" method="post">
-            <div class="row collapse">
-                <div class="large-9 columns">
-                    <input name="keywords" type="search" placeholder="Quick search">
-                </div>
-            </div>
-        </form>
 
+    <div class="top-bar-right">
+        <ul class="menu menu-item" data-responsive-menu="drilldown medium-dropdown">
+            <li class="has-submenu menu-item">
+                <a href="#">{{user.username}}</a>
+                <ul class="menu-item submenu menu vertical" data-submenu>
+                    <li><a href="/users/profile">Change password</a></li>
+                    {{#if user.admin}}
+                        <li><a href="/users/add">Add new user</a></li>
+                    {{/if}}
+                </ul>
+            </li>
+            <li class="menu-item"><a href="/logout">Logout</a></li>
+        </ul>
     </div>
 </div>
 <div class="header">
     <div class="row">
-        <div class="large-10 large-offset-1 medium-10 medium-offset-1 columns">
+        <div class="large-7 large-offset-1 medium-7 medium-offset-1 columns">
             <h1 class="header-title hide-for-small">AnswerIt</h1>
-            <p>No more brain ache and carefully crafting words - Just 'Cut and Paste'</p>
+            <p>No more brain ache carefully crafting words - Just 'Cut and Paste'</p>
+        </div>
+        <div class="large-3 large-offset-1 medium-3 medium-offset-1 columns">
+            <br>
+            <form action="/search" method="post">
+                <div class="row collapse">
+                    <div class="large-9 columns">
+                        <input name="keywords" type="search" placeholder="Quick search">
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -62,7 +79,7 @@
 
 
 <div class="row" style="margin-top: 30px;">
-    <div class="large-10 large-offset-1 medium-10 medium-offset-1 columns">
+    <div class="large-10 large-offset-1 medium-10 medium-offset-1 small-10 small-offset-1 columns">
         {{{body}}}
     </div>
 </div>

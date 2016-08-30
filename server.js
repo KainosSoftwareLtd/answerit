@@ -52,7 +52,7 @@ var AnswerIt = function () {
      */
     self.terminator = function (sig) {
         if (typeof sig === "string") {
-            console.log('%s: Received %s - terminating Tech Radar ...',
+            console.log('%s: Received %s - terminating AnswerIt ...',
                 Date(Date.now()), sig);
             process.exit(1);
         }
@@ -158,12 +158,15 @@ var AnswerIt = function () {
         self.app.use('/question' , question);
         self.app.use('/answer' , answer);
 
+
+
         // catch 404 and forward to error handler
         self.app.use(function (req, res, next) {
             var err = new Error('Not Found');
             err.status = 404;
             next(err);
         });
+
     }
 
     /**

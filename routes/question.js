@@ -12,7 +12,7 @@ var qalink = require('../dao/question_answer_link');
 /* List questions */
 router.get('/list', security.isAuthenticated, function (req, res, next) {
     question.getAll(function (results) {
-        res.render('list-questions' , { questions : results} );
+        res.render('list-questions', {questions: results});
     })
 });
 
@@ -21,29 +21,44 @@ router.get('/show/:questionId', security.isAuthenticated, function (req, res, ne
     var questionId = sanitizer(req.params.questionId);
 
     question.getById(questionId, function (question) {
-        answer.getForQuestionId( questionId , function( answers ) {
-            res.render('show-question' , { question : question, answers: answers} );
+        answer.getForQuestionId(questionId, function (answers) {
+            res.render('show-question', {question: question, answers: answers, test: "frank"});
         })
 
     })
 });
 
 /* Add a question */
-router.get('/add', security.isAuthenticatedAdmin, function (req, res, next) {
+router.get('/add', security.canEdit, function (req, res, next) {
     res.render('add-question');
 });
 
 /* Add a question */
-router.get('/addanswer/:questionId', security.isAuthenticatedAdmin, function (req, res, next) {
+router.get('/addanswer/:questionId', security.canEdit, function (req, res, next) {
     var questionId = sanitizer(req.params.questionId);
     question.getById(questionId, function (question) {
-        res.render('add-second-answer' , {question: question});
+        res.render('add-second-answer', {question: question});
     });
 
 });
 
+/* Delete an answer */
+router.post('/deleteanswer', security.canEdit, function (req, res, next) {
+    var questionId = sanitizer(req.body.question);
+    var answerId = sanitizer(req.body.answer);
+
+    console.log(questionId);
+    console.log(answerId);
+
+    answer.delete(answerId, function (result) {
+        res.redirect('/question/show/' + questionId);
+        return;
+    })
+
+});
+
 /* Add a question */
-router.post('/add', security.isAuthenticatedAdmin, function (req, res, next) {
+router.post('/add', security.canEdit, function (req, res, next) {
 
     var questionText = sanitizer(req.body.question);
     var answerText = sanitizer(req.body.answer);

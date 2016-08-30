@@ -5699,7 +5699,7 @@ var documentElement = document.documentElement;
 		"padding:0;margin-top:1px;position:absolute";
 	container.appendChild( div );
 
-	// Executing both pixelPosition & boxSizingReliable tests require only one layouts
+	// Executing both pixelPosition & boxSizingReliable tests require only one layout
 	// so they're executed at the same time to save the second computation.
 	function computeStyleTests() {
 		div.style.cssText =
@@ -8303,7 +8303,7 @@ jQuery.extend( {
 		global: true,
 		processData: true,
 		async: true,
-		contentType: "application/x-app.js-form-urlencoded; charset=UTF-8",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		/*
 		timeout: 0,
 		data: null,
@@ -9307,7 +9307,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 			"url" :
 			typeof s.data === "string" &&
 				( s.contentType || "" )
-					.indexOf( "application/x-app.js-form-urlencoded" ) === 0 &&
+					.indexOf( "application/x-www-form-urlencoded" ) === 0 &&
 				rjsonp.test( s.data ) && "data"
 		);
 

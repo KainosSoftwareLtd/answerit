@@ -11,7 +11,7 @@ var qalink = require('../dao/question_answer_link');
 
 
 /* Add another answer to an existing existing */
-router.post('/add', security.isAuthenticatedAdmin, function (req, res, next) {
+router.post('/add', security.canEdit, function (req, res, next) {
 
     var questionId = sanitizer(req.body.questionid);
     var answerText = sanitizer(req.body.answer);
@@ -23,7 +23,7 @@ router.post('/add', security.isAuthenticatedAdmin, function (req, res, next) {
                 return;
             }
             qalink.add(questionId, answerId, function (linkId, lerror) {
-                res.redirect("/search")
+                res.redirect("/question/show/" + questionId)
                 return;
             })
         });

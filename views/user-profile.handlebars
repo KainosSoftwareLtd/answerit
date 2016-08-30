@@ -1,0 +1,31 @@
+<div class="row">
+    {{#if error}}
+        <p style="color:red">{{ error }}</p>
+    {{/if}}
+
+
+    <form action="/users/update-profile" method="post">
+
+        <div class="row">
+            <div class="large-6 large-centered columns">
+                <h5>Update password for {{ user.username }}</h5>
+                <label for="oldPassword">Old password</label>
+                <input type="password" class="form-control" id="oldPassword" name="oldPassword"
+                       placeholder="Old password" maxlength="100">
+
+                <label for="password">New password</label>
+                <input type="password" class="form-control" id="password" name="password"
+                       placeholder="New password" maxlength="100">
+
+                <label for="confirmPassword">Confirm password</label>
+                <input type="password" class="form-control" id="confirmPassword"
+                       name="confirmPassword" placeholder="Confirm password">
+                <button type="submit" class="button">Update</button>
+            </div>
+        </div>
+
+
+    </form>
+</div>
+
+</div>
