@@ -1,3 +1,5 @@
+'use strict';
+
 var sanitizer = require('sanitize-html');
 var security = require('../utils/security');
 var roles = require('../dao/role');

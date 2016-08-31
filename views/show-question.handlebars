@@ -1,33 +1,57 @@
-<div class="row" >
-    <div class="large-10 medium-10 columns">
-
+<div class="row">
+    <div class="small-8 columns">
         <small>{{dateFormat question.created "dddd, MMMM Do YYYY"}}</small>
-        <h4>
         <div class="question">{{question.text}}</div>
-        </h4>
-        <br>
+    </div>
+    <div class="small-2 columns">
+        {{#if user.canEdit}}
+            <div class="row">
+                <div class="large-6 medium-6 columns">
+                    <a class="button small" href="/question/addanswer/{{question.id}}">Add answer</a>
+                </div>
+                <div class="large-6 medium-6 columns">
+                    <form name="deleteForm" method="post" action="/question/delete">
+                        <input type="hidden" name="question" value="{{question.id}}">
+                        <button class="button small" type="submit">Delete question</button>
+                    </form>
+                </div>
+            </div>
+
+        {{/if}}
+    </div>
+    <div class="small-2 columns">
+    </div>
+
+</div>
+
+<div class="row">
+    <hr>
+    <div class="small-10 small-10 columns">
         <h5>{{answers.length}} Answer(s)</h5>
-        <hr>
-        {{#each answers}}
+    </div>
+    <hr>
+</div>
+{{#each answers}}
+    <div class="row">
+        <div class="small-8 columns">
             <div class="answer">
                 <small>{{dateFormat this.created "dddd, MMMM Do YYYY"}}</small>
                 <P class="an-answer">{{this.text}}</P>
-
-                {{#if ../user.admin}}
-                    <form name="deleteForm" method="post" action="/question/deleteanswer">
-                        <input type="hidden" name="question" value="{{../question.id}}">
-                        <input type="hidden" name="answer" value="{{this.id}}">
-                        <button class="button small" type="submit">Delete this answer</button>
-                    </form>
-                {{/if}}
-
             </div>
-            <hr>
-        {{/each}}
-
-        {{#if user.canEdit}}
-        <p><a class="button radius" href="/question/addanswer/{{question.id}}">Add another answer to this question</a></p>
-        {{/if}}
+        </div>
+        <div class="small-2 columns">
+            {{#if ../user.admin}}
+                <form name="deleteForm" method="post" action="/question/deleteanswer">
+                    <input type="hidden" name="question" value="{{../question.id}}">
+                    <input type="hidden" name="answer" value="{{this.id}}">
+                    <button class="button small" type="submit">Delete answer</button>
+                </form>
+            {{/if}}
+        </div>
+        <div class="small-2 columns"></div>
+        <hr>
     </div>
-</div>
+{{/each}}
+
+
 

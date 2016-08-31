@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Security helper functions
  */
@@ -55,7 +57,7 @@ Security.isAuthenticatedAdmin = function (req, res, next) {
 
         return next();
     }
-    
+
     req.session.redirect_to = req.baseUrl + req.url;
     res.redirect('/login');
 }

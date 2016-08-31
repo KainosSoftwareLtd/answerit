@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var security = require('../utils/security');
 var passport = require('passport');

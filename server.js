@@ -1,4 +1,7 @@
 #!/bin/env node
+
+'use strict';
+
 /**
  * answerIt app
  */

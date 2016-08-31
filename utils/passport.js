@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Configure passport for simple database authentication
  */

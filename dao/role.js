@@ -1,3 +1,5 @@
+'use strict';
+
 var pg = require('pg');
 var dbhelper = require('../utils/dbhelper.js');
 

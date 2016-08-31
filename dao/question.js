@@ -1,3 +1,5 @@
+'use strict';
+
 var pg = require('pg');
 var dbhelper = require('../utils/dbhelper.js');
 
@@ -63,7 +65,6 @@ Question.getAll = function (done) {
 Question.search = function (terms, done) {
     var sql = "SELECT id,text from question where ti @@ to_tsquery($1)";
 
-    console.log(sql);
     var params = [terms];
     dbhelper.query(sql, params,
         function (results) {
@@ -97,6 +98,26 @@ Question.fullQASearch = function (terms, done) {
         function (error) {
             console.error(error);
             done(null);
+        });
+}
+
+/**
+ * Delete a question
+ * @param answerId
+ * @param done
+ */
+Question.delete = function( questionId, done) {
+    var params = [questionId];
+
+    var sql = "DELETE FROM question WHERE id = $1";
+
+    dbhelper.query(sql, params,
+        function (result) {
+            done(true);
+        },
+        function (error) {
+            console.error(error);
+            done(false, error);
         });
 }
 

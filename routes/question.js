@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var security = require('../utils/security');
 var passport = require('passport');
@@ -47,11 +49,19 @@ router.post('/deleteanswer', security.canEdit, function (req, res, next) {
     var questionId = sanitizer(req.body.question);
     var answerId = sanitizer(req.body.answer);
 
-    console.log(questionId);
-    console.log(answerId);
-
     answer.delete(answerId, function (result) {
         res.redirect('/question/show/' + questionId);
+        return;
+    })
+
+});
+
+/* Delete a question */
+router.post('/delete', security.canEdit, function (req, res, next) {
+    var questionId = sanitizer(req.body.question);
+
+    question.delete(questionId, function (result) {
+        res.redirect('/');
         return;
     })
 
@@ -75,7 +85,7 @@ router.post('/add', security.canEdit, function (req, res, next) {
                 return;
             }
             qalink.add(questionId, answerId, function (linkId, lerror) {
-                res.redirect("/search")
+                res.redirect("/question/show/" + questionId)
                 return;
             })
         });
