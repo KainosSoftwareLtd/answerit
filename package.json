@@ -28,6 +28,7 @@
     "express-handlebars":"latest",
     "handlebars-dateformat":"latest",
     "passport": "latest",
-    "passport-local": "latest"
+    "passport-local": "latest",
+    "connect-flash" : "0.1.1"
   }
 }

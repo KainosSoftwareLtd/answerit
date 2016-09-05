@@ -12,14 +12,15 @@ var answer = require('../dao/answer');
 
 /* Login page */
 router.get('/login', function (req, res, next) {
-    res.render('login', {layout: 'unauthenticated'});
+    var messages = req.flash('error');
+    res.render('login', {layout: 'unauthenticated', messages: messages});
 });
 
 /* Accept login request */
 router.post('/loginmein', passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
-    // failureFlash: true
+    failureFlash: true
 }));
 
 

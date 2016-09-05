@@ -17,6 +17,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var exphbs = require('express-handlebars');
 var hdf = require('handlebars-dateformat');
+var flash = require('connect-flash');
 
 // This is used for building the search terms
 String.prototype.replaceAll = function(search, replacement) {
@@ -104,6 +105,7 @@ var AnswerIt = function () {
         self.app.use(cookieParser());
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({extended: false}));
+        self.app.use(flash());
 
         // Setup the Google Analytics ID if defined
         self.app.locals.google_id = process.env.GOOGLE_ID || undefined;

@@ -1,4 +1,9 @@
+
+
 <div class="medium-6 medium-centered large-4 large-centered columns">
+    {{#if messages }}
+        <label class="warning">{{messages}}</label>
+    {{/if}}
     <form id="login" action="/loginmein" method="post">
         <div class="row column">
             <br>
