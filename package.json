@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node ./server.js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "async": "latest"
+  },
   "bundleDependencies": [],
   "main": "server.js",
   "engines": {
@@ -13,22 +15,23 @@
     "npm": "2.15.5"
   },
   "dependencies": {
-    "pg" : "4.1.1",
     "body-parser": "~1.15.1",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.2.0",
-    "express": "latest",
-    "express-session":"latest",
-    "sanitize-html": "latest",
-    "morgan": "~1.7.0",
-    "serve-favicon": "~2.3.0",
+    "connect-flash": "0.1.1",
     "db-migrate": "0.10.0-beta.12",
     "db-migrate-pg": "latest",
-    "dotenv":"1.2.0",
-    "express-handlebars":"latest",
-    "handlebars-dateformat":"latest",
+    "debug": "~2.2.0",
+    "dotenv": "1.2.0",
+    "express": "latest",
+    "express-enforces-ssl": "^1.1.0",
+    "express-handlebars": "latest",
+    "express-session": "latest",
+    "handlebars-dateformat": "latest",
+    "helmet": "^2.1.2",
+    "morgan": "~1.7.0",
     "passport": "latest",
     "passport-local": "latest",
-    "connect-flash" : "0.1.1"
+    "pg": "4.1.1",
+    "sanitize-html": "latest",
+    "serve-favicon": "~2.3.0"
   }
 }

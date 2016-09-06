@@ -12,12 +12,13 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var exphbs = require('express-handlebars');
 var hdf = require('handlebars-dateformat');
 var flash = require('connect-flash');
+var helmet = require('helmet');
+var express_enforces_ssl = require('express-enforces-ssl');
 
 // This is used for building the search terms
 String.prototype.replaceAll = function(search, replacement) {
@@ -102,7 +103,11 @@ var AnswerIt = function () {
 
         self.app.set('view engine', 'handlebars');
 
-        self.app.use(cookieParser());
+        /*
+         * Uses 7 out of 10 helmet middleware functions,
+         * leaving out contentSecurityPolicy, hpkp, and noCache
+         */
+        self.app.use(helmet()); 
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({extended: false}));
         self.app.use(flash());
@@ -111,7 +116,19 @@ var AnswerIt = function () {
         self.app.locals.google_id = process.env.GOOGLE_ID || undefined;
 
         var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
-        self.app.use(session({secret: cookie_key}));
+        var sess = {
+            secret: cookie_key,
+            cookie: {}
+        }
+
+        if (self.app.get('env')  == 'production') {
+            self.app.enable('trust proxy', 1); // trusts first proxy - Heroku load balancer
+            console.log("In production mode");
+            self.app.use(express_enforces_ssl());
+            sess.cookie.secure = true;
+        }
+
+        self.app.use(session(sess));
 
         console.log("GA ID:" + self.app.locals.google_id);
         console.log("Cookie key:" + cookie_key);
@@ -184,10 +201,7 @@ var AnswerIt = function () {
                 Date(Date.now()), self.port);
         });
     };
-
 }
-
-
 
 /**
  *  main():  Main code.
