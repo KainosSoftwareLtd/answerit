@@ -12,7 +12,6 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var exphbs = require('express-handlebars');
@@ -102,7 +101,6 @@ var AnswerIt = function () {
 
         self.app.set('view engine', 'handlebars');
 
-        self.app.use(cookieParser());
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({extended: false}));
         self.app.use(flash());
@@ -186,8 +184,6 @@ var AnswerIt = function () {
     };
 
 }
-
-
 
 /**
  *  main():  Main code.

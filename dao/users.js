@@ -48,6 +48,27 @@ Users.findById = function (id, done) {
 };
 
 /**
+ * Get a user by email
+ * @param email Email of the user to search for
+ * @param done Function to call with the result
+ */
+Users.findByEmail = function (email, done) {
+    var sql = "SELECT users.*,roles.admin as admin,roles.name as rolename" +
+        " FROM users " +
+        " INNER JOIN roles on users.role=roles.id " +
+        " WHERE users.email=$1";
+    var params = [email];
+    dbhelper.query(sql, params,
+        function (results) {
+            done(null, results[0]);
+        },
+        function (error) {
+            console.log(error);
+            return done(null, null);
+        });
+};
+
+/**
  * Get a user by username
  * @param username Username of the user to search for
  * @param done Function to call with the result
@@ -76,12 +97,12 @@ Users.findByUsername = function (username, done) {
  * @param admin Is the user an admin (boolean)
  * @param done Function to call when complete
  */
-Users.add = function (username, displayName, password, admin, done) {
+Users.add = function (username, displayName, password, admin, email, done) {
 
     var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
 
-    var sql = "INSERT INTO users ( username, displayName, password, role) values ( $1 , $2 , $3 ,$4 ) returning id";
-    var params = [username, displayName, userHash, admin];
+    var sql = "INSERT INTO users ( username, displayName, password, role, email) values ( $1 , $2 , $3 ,$4, $5) returning id";
+    var params = [username, displayName, userHash, admin, email];
 
     dbhelper.insert(sql, params,
         function (result) {
