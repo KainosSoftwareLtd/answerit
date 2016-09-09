@@ -6,7 +6,6 @@ var dbhelper = require('../utils/dbhelper.js');
 var Users = function () {
 };
 
-
 /**
  * Get all users
  * @param done Function to call with the results
@@ -69,40 +68,16 @@ Users.findByEmail = function (email, done) {
 };
 
 /**
- * Get a user by username
- * @param username Username of the user to search for
- * @param done Function to call with the result
- */
-Users.findByUsername = function (username, done) {
-    var sql = "SELECT users.*,roles.admin as admin,roles.name as rolename" +
-        " FROM users " +
-        " INNER JOIN roles on users.role=roles.id " +
-        " WHERE users.username=$1";
-    var params = [username];
-    dbhelper.query(sql, params,
-        function (results) {
-            done(null, results[0]);
-        },
-        function (error) {
-            console.log(error);
-            return done(null, null);
-        });
-};
-
-/**
  * Add a new user
- * @param username Username to insert
  * @param displayName Full name of the user
- * @param password Password for the user
- * @param admin Is the user an admin (boolean)
+ * @param role Role of the user; 0=admin, 1=user
+ * @param email Email address of the user
  * @param done Function to call when complete
  */
-Users.add = function (username, displayName, password, admin, email, done) {
+Users.add = function (displayName, role, email, done) {
 
-    var userHash = require('crypto').createHash('sha256').update(password).digest('base64');
-
-    var sql = "INSERT INTO users ( username, displayName, password, role, email) values ( $1 , $2 , $3 ,$4, $5) returning id";
-    var params = [username, displayName, userHash, admin, email];
+    var sql = "INSERT INTO users (displayName, role, email) values ( $1 , $2 , $3 ) returning id";
+    var params = [displayName, role, email];
 
     dbhelper.insert(sql, params,
         function (result) {
@@ -143,15 +118,14 @@ Users.delete = function (ids, done) {
  *
  * @param id Target users ID
  * @param displayName New display name
- * @param passwordHash New password
  * @param role User role
  * @param done Callback
  */
-Users.update = function (id, displayName, passwordHash, role, done) {
-    var params = [displayName, passwordHash, role, id];
+Users.update = function (id, displayName, role, done) {
+    var params = [displayName, role, id];
 
 
-    var sql = "UPDATE users SET displayName=$1, password=$2, role=$3 where id=$4";
+    var sql = "UPDATE users SET displayName=$1, role=$2 where id=$3";
 
     dbhelper.query(sql, params,
         function (result) {

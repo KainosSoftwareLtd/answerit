@@ -74,10 +74,9 @@ passport.use(new OIDCStrategy({
  */
 function registerUserUsingProfileData(profileJson, done) {
     log.info("Registering a new user with email: " + profileJson.email);
-    users.add(profileJson.unique_name, profileJson.given_name, "letmein", 0, profileJson.email, function(results, error){
-        var addedUserId = results;
-        log.info("Getting user with id = " + addedUserId + " from the database");
-        users.findById(addedUserId, function(err, user){
+    users.add(profileJson.name, 1, profileJson.email, function(userId, error){
+        log.info("Getting user with id = " + userId + " from the database");
+        users.findById(userId, function(err, user){
             if(err){
                 return done(err, null);
             }

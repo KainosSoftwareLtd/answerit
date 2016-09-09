@@ -15,9 +15,9 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db, callback) {
-  db.addColumn('users', 'email', {type: 'string', length: 100, unique: true}, callback);
+  db.removeColumn('users', 'username', callback);
 };
 
 exports.down = function(db, callback) {
-  db.removeColumn('users', 'email', callback);
+  db.addColumn('users', 'username', {type: 'string', length: 15, notNull: true}, callback);
 };
