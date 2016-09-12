@@ -59,7 +59,7 @@ passport.use(new OIDCStrategy({
                     });
                 } else {
                     log.info("An existing user is logging in using email: " + user.email);
-                    log.info(user);
+                    log.debug(user);
                     return done(null, user);
                 }
             });
