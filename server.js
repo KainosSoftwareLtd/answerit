@@ -107,7 +107,7 @@ var AnswerIt = function () {
          * Uses 7 out of 10 helmet middleware functions,
          * leaving out contentSecurityPolicy, hpkp, and noCache
          */
-        self.app.use(helmet()); 
+        self.app.use(helmet());
         self.app.use(bodyParser.json());
         self.app.use(bodyParser.urlencoded({extended: false}));
         self.app.use(flash());
