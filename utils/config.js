@@ -24,13 +24,13 @@
     skipUserProfile: process.env.AZURE_SKIP_USER_PROFILE || true,
     
     // id_token for login flow
-    responseType: process.env.AZURE_RESPONSE_TYPE || 'id_token',
+    responseType: process.env.AZURE_RESPONSE_TYPE || 'id_token code',
     
     // we should have token passed back to us in a POST
-    responseMode: process.env.AZURE_RESPONSE_MODE || 'form_post',
+    responseMode: process.env.AZURE_RESPONSE_MODE || 'query',
     
-    // additional scopes you may wish to pass
-    // scope: process.env.AZURE_SCOPE || ['email', 'profile'], 
+    // additional scopes you may wish to pass e.g. ['email', 'profile']
+    scope: process.env.AZURE_SCOPE,
     // if you have validation on, you cannot have users from multiple tenants sign in
     validateIssuer: process.env.AZURE_VALIDATE_ISSUER || true,
     
