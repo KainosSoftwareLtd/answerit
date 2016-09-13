@@ -43,12 +43,13 @@ if (strategyConfig.loggingLevel) { log.levels("console", strategyConfig.loggingL
 
 passport.use(new OIDCStrategy(strategyConfig,
     function (profile, done) {
-        if (!profile._json.email) {
+        var email = profile._json.email || profile._json.unique_name
+        if (!email) {
             return done(new Error("No email found"), null);
         }
 
         process.nextTick(function () {
-            users.findByEmail(profile._json.email, function (err, user) {
+            users.findByEmail(email, function (err, user) {
                 if (err) {
                     return done(err);
                 }
@@ -77,7 +78,8 @@ passport.use(new OIDCStrategy(strategyConfig,
  */
 function registerUserUsingProfileData(profileJson, done) {
     log.info("Registering a new user with email: " + profileJson.email);
-    users.add(profileJson.name, 1, profileJson.email, function(userId, error){
+    var email = profileJson.email || profileJson.unique_name;
+    users.add(profileJson.name, 1, email, function(userId, error){
         log.info("Getting user with id = " + userId + " from the database");
         users.findById(userId, function(err, user){
             if(err){
