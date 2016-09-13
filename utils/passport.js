@@ -10,23 +10,10 @@ const users = require('../dao/users.js');
 const config = require('./config');
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 
-var log = bunyan.createLogger({
-  name: 'AnswerIt - passport.js',
-  streams: [{
-    stream: process.stderr,
-    level: "error",
-    name: "error"
-  }, {
-    stream: process.stdout,
-    level: "info",
-    name: "console"
-  }]
-});
-
-passport.use(new OIDCStrategy({
+var strategyConfig = {
     callbackURL: config.creds.returnURL,
     realm: config.creds.realm,
-    clientID: config.creds.clientID,
+    clientID:config.creds.clientID,
     clientSecret: config.creds.clientSecret,
     oidcIssuer: config.creds.issuer,
     identityMetadata: config.creds.identityMetadata,
@@ -37,8 +24,24 @@ passport.use(new OIDCStrategy({
     validateIssuer: config.creds.validateIssuer,
     passReqToCallback: config.creds.passReqToCallback,
     loggingLevel: config.creds.loggingLevel
-    },
+};
 
+var log = bunyan.createLogger({
+  name: 'AnswerIt - passport.js',
+  streams: [{
+    stream: process.stderr,
+    level: "error",
+    name: "error"
+  }, {
+    stream: process.stdout,
+    level: "warn",
+    name: "console"
+  }]
+});
+
+if (strategyConfig.loggingLevel) { log.levels("console", strategyConfig.loggingLevel); }
+
+passport.use(new OIDCStrategy(strategyConfig,
     function (profile, done) {
         if (!profile._json.email) {
             return done(new Error("No email found"), null);
