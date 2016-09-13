@@ -8,7 +8,7 @@ Simple site/database to store common questions and their answers.  Specifically 
 
 To enable Azure AD sign-in, set the following environment variables:
 
-`AZURE_IDENTITY_METADATA=https://login.microsoftonline.com/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx/.well-known/openid-configuration`
+`AZURE_IDENTITY_METADATA=https://login.microsoftonline.com/YOUR_TENANT_NAME_OR_ID/.well-known/openid-configuration`
 
 `AZURE_CLIENT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx`
 
