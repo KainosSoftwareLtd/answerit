@@ -16,12 +16,12 @@ To enable Azure AD sign-in, set the following environment variables:
 
 `AZURE_RETURN_URL=https://xxxxxxxxxxx.com/auth/openid/return`
 
+To learn more about the above values, click [here](https://azure.microsoft.com/en-us/documentation/articles/active-directory-b2c-reference-oidc/#get-a-token).
+Additional Azure AD settings can be found in [config.js](utils/config.js)
+
 ## Running the server application
 
 `node server.js | bunyan`
-
-If you want to know more about the above values, click [here](https://azure.microsoft.com/en-us/documentation/articles/active-directory-b2c-reference-oidc/#get-a-token).
-More optional Azure AD settings can be found in [config.js](utils/config.js)
 
 # Tech used
  
