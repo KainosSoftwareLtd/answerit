@@ -14,6 +14,8 @@ To enable Azure AD sign-in, set the following environment variables:
 
 `AZURE_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxx=`
 
+`AZURE_RETURN_URL=https://xxxxxxxxxxx.com/auth/openid/return`
+
 ## Running the server application
 
 `node server.js | bunyan`
