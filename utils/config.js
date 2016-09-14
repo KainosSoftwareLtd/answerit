@@ -30,6 +30,7 @@
     responseMode: process.env.AZURE_RESPONSE_MODE || 'query',
     
     // additional scopes you may wish to pass e.g. ['email', 'profile']
+    // optional
     scope: process.env.AZURE_SCOPE,
     // if you have validation on, you cannot have users from multiple tenants sign in
     validateIssuer: process.env.AZURE_VALIDATE_ISSUER || true,

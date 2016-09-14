@@ -13,7 +13,7 @@ const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 var strategyConfig = {
     callbackURL: config.creds.returnURL,
     realm: config.creds.realm,
-    clientID:config.creds.clientID,
+    clientID: config.creds.clientID,
     clientSecret: config.creds.clientSecret,
     oidcIssuer: config.creds.issuer,
     identityMetadata: config.creds.identityMetadata,
@@ -43,6 +43,8 @@ if (strategyConfig.loggingLevel) { log.levels("console", strategyConfig.loggingL
 
 passport.use(new OIDCStrategy(strategyConfig,
     function (profile, done) {
+        // Depending on the type of the account e.g. registered in live.com or kainos.com
+        // user's email may be returned in "unique_name" field instead of "email"
         var email = profile._json.email || profile._json.unique_name
         if (!email) {
             return done(new Error("No email found"), null);
