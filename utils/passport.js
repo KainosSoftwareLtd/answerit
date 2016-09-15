@@ -10,20 +10,7 @@ const users = require('../dao/users.js');
 const config = require('./config');
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 
-var log = bunyan.createLogger({
-  name: 'AnswerIt - passport.js',
-  streams: [{
-    stream: process.stderr,
-    level: "error",
-    name: "error"
-  }, {
-    stream: process.stdout,
-    level: "info",
-    name: "console"
-  }]
-});
-
-passport.use(new OIDCStrategy({
+var strategyConfig = {
     callbackURL: config.creds.returnURL,
     realm: config.creds.realm,
     clientID: config.creds.clientID,
@@ -37,15 +24,34 @@ passport.use(new OIDCStrategy({
     validateIssuer: config.creds.validateIssuer,
     passReqToCallback: config.creds.passReqToCallback,
     loggingLevel: config.creds.loggingLevel
-    },
+};
 
+var log = bunyan.createLogger({
+  name: 'AnswerIt - passport.js',
+  streams: [{
+    stream: process.stderr,
+    level: "error",
+    name: "error"
+  }, {
+    stream: process.stdout,
+    level: "warn",
+    name: "console"
+  }]
+});
+
+if (strategyConfig.loggingLevel) { log.levels("console", strategyConfig.loggingLevel); }
+
+passport.use(new OIDCStrategy(strategyConfig,
     function (profile, done) {
-        if (!profile._json.email) {
+        // Depending on the type of the account e.g. registered in live.com or kainos.com
+        // user's email may be returned in "unique_name" field instead of "email"
+        var email = profile._json.email || profile._json.unique_name
+        if (!email) {
             return done(new Error("No email found"), null);
         }
 
         process.nextTick(function () {
-            users.findByEmail(profile._json.email, function (err, user) {
+            users.findByEmail(email, function (err, user) {
                 if (err) {
                     return done(err);
                 }
@@ -74,7 +80,8 @@ passport.use(new OIDCStrategy({
  */
 function registerUserUsingProfileData(profileJson, done) {
     log.info("Registering a new user with email: " + profileJson.email);
-    users.add(profileJson.name, 1, profileJson.email, function(userId, error){
+    var email = profileJson.email || profileJson.unique_name;
+    users.add(profileJson.name, 1, email, function(userId, error){
         log.info("Getting user with id = " + userId + " from the database");
         users.findById(userId, function(err, user){
             if(err){
