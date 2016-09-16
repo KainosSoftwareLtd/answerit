@@ -119,13 +119,14 @@ Users.delete = function (ids, done) {
  * @param id Target users ID
  * @param displayName New display name
  * @param role User role
+ * @param email User email
  * @param done Callback
  */
-Users.update = function (id, displayName, role, done) {
-    var params = [displayName, role, id];
+Users.update = function (id, displayName, role, email, done) {
+    var params = [displayName, role, email, id];
 
 
-    var sql = "UPDATE users SET displayName=$1, role=$2 where id=$3";
+    var sql = "UPDATE users SET displayName=$1, role=$2, email=$3 where id=$4";
 
     dbhelper.query(sql, params,
         function (result) {
@@ -136,6 +137,5 @@ Users.update = function (id, displayName, role, done) {
             done(false, error);
         });
 };
-
 
 module.exports = Users;

@@ -13,16 +13,11 @@ var async = require('async');
 var client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 
-
-var hpassword = require('crypto').createHash('sha256').update('letmein').digest('base64');
-
 var statements = [
-
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user1' , '" + hpassword + "' , 'User One', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user2' , '" + hpassword + "' , 'User Two', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user3' , '" + hpassword + "' , 'User Three', 0) ",
-    "INSERT INTO users (username , password , displayName , role ) VALUES ('user4' , '" + hpassword + "' , 'User Four', 1) "
-
+    "INSERT INTO users ( displayName , role, email ) VALUES ('User One', 0, 'user1@email.com') ",
+    "INSERT INTO users ( displayName , role, email ) VALUES ('User Two', 0, 'user2@email.com') ",
+    "INSERT INTO users ( displayName , role, email ) VALUES ('User Three', 0, 'user3@email.com') ",
+    "INSERT INTO users ( displayName , role, email ) VALUES ('User Four', 1, 'user4@email.com') ",
 ];
 
 function doQuery(item, callback) {
