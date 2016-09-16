@@ -17,9 +17,7 @@ Security.isAuthenticated = function (req, res, next) {
     if (req.isAuthenticated()) {
         res.locals.user = req.user;
 
-        if (req.user.admin || req.user.rolename === 'author' ) {
-            req.user.canEdit = true;
-        }
+        req.user.canEdit = true;
 
         return next();
     }
@@ -28,17 +26,13 @@ Security.isAuthenticated = function (req, res, next) {
     res.redirect('/login');
 }
 
-
 Security.canEdit = function (req, res, next) {
+    // all authenticated users can edit
     if (req.isAuthenticated()) {
-        res.locals.user = req.user;
-
-        if (req.user.admin || req.user.rolename === 'author' ) {
-            req.user.canEdit = true;
-            return next();
-        } else {
-            res.redirect('/error');
-        }
+        req.user.canEdit = true;
+        return next();
+    } else {
+        res.redirect('/error');
     }
 
     req.session.redirect_to = req.url;
