@@ -21,7 +21,7 @@ Question.add = function (question, userId, done) {
             done(result.rows[0].id, null);
         },
         function (error) {
-            console.log(error); 
+            console.log(error);
             done(null, error);
         });
 };
