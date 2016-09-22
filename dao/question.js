@@ -11,10 +11,10 @@ var Question = function () {
  * @param Question text to add
  * @param done Function to call when complete
  */
-Question.add = function (question, done) {
+Question.add = function (question, userId, done) {
 
-    var sql = "INSERT INTO question (text,ti) values ( $1 , to_tsvector('english',$1)) returning id";
-    var params = [question];
+    var sql = "INSERT INTO question (text, userid, ti) values ( $1 , $2, to_tsvector('english',$1)) returning id";
+    var params = [question, userId];
 
     dbhelper.insert(sql, params,
         function (result) {
