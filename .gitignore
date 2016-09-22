@@ -3,3 +3,4 @@ process.env
 .idea/
 jsconfig.json
 .jshintrc
+.vscode/

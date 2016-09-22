@@ -1,6 +1,11 @@
 <div class="row">
     <div class="small-8 columns">
-        <small>{{dateFormat question.created "dddd, MMMM Do YYYY"}}</small>
+        <small>
+            {{# if question.displayname}}
+                <a href="mailto:{{question.email}}">{{question.displayname}}</a> asked on
+            {{/if}}
+            {{dateFormat question.created "dddd, MMMM Do YYYY"}}
+        </small>
         <div class="question">{{question.text}}</div>
     </div>
     <div class="small-2 columns">
@@ -35,7 +40,12 @@
     <div class="row">
         <div class="small-8 columns">
             <div class="answer">
-                <small>{{dateFormat this.created "dddd, MMMM Do YYYY"}}</small>
+                <small>
+                    {{# if this.displayname}}
+                        <a href="mailto:{{this.email}}">{{this.displayname}}</a> asked on
+                    {{/if}}
+                    {{dateFormat this.created "dddd, MMMM Do YYYY"}}
+                </small>
                 <P class="an-answer">{{this.text}}</P>
             </div>
         </div>

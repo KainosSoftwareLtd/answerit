@@ -21,7 +21,7 @@ Question.add = function (question, userId, done) {
             done(result.rows[0].id, null);
         },
         function (error) {
-            console.log(error);
+            console.log(error); 
             done(null, error);
         });
 };
@@ -32,7 +32,9 @@ Question.add = function (question, userId, done) {
  * @param done Function to call with the results
  */
 Question.getById = function (id, done) {
-    var sql = "SELECT * from question where id=$1";
+    var sql = "SELECT q.*, u.displayname, u.email from question q " + 
+        "LEFT OUTER JOIN users u on u.id=q.userid " +
+        "WHERE q.id=$1";
 
     var params = [id];
     dbhelper.query(sql, params,
