@@ -11,10 +11,10 @@ var Answer = function () {
  * @param Answer text to add
  * @param done Function to call when complete
  */
-Answer.add = function (answer, done) {
+Answer.add = function (answer, userId, done) {
 
-    var sql = "INSERT INTO answer ( text,ti ) values ( $1 ,  to_tsvector('english',$1) ) returning id";
-    var params = [answer];
+    var sql = "INSERT INTO answer ( text, userId, ti ) values ( $1 , $2 , to_tsvector('english',$1) ) returning id";
+    var params = [answer, userId];
 
     dbhelper.insert(sql, params,
         function (result) {
@@ -32,8 +32,9 @@ Answer.add = function (answer, done) {
  * @param done Function to call with the results
  */
 Answer.getForQuestionId = function (id, done) {
-    var sql = "select a.* from answer a " +
+    var sql = "select a.*, u.displayname, u.email from answer a " +
         "join question_answer_link qal on qal.answer_id=a.id " +
+        "left outer join users u on u.id=a.userid " +
         "where qal.question_id=$1";
 
     var params = [id];

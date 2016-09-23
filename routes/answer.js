@@ -17,9 +17,10 @@ router.post('/add', security.canEdit, function (req, res, next) {
 
     var questionId = sanitizer(req.body.questionid);
     var answerText = sanitizer(req.body.answer);
+    var userId = req.user.id;
 
 
-    answer.add(answerText, function (answerId, aerror) {
+    answer.add(answerText, userId, function (answerId, aerror) {
             if (null == answerId) {
                 res.redirect("/error")
                 return;

@@ -72,14 +72,15 @@ router.post('/add', security.canEdit, function (req, res, next) {
 
     var questionText = sanitizer(req.body.question);
     var answerText = sanitizer(req.body.answer);
+    var userId = req.user.id;
 
 
-    question.add(questionText, function (questionId, qerror) {
+    question.add(questionText, userId, function (questionId, qerror) {
         if (null == questionId) {
             res.redirect("/error")
             return;
         }
-        answer.add(answerText, function (answerId, aerror) {
+        answer.add(answerText, userId, function (answerId, aerror) {
             if (null == answerId) {
                 res.redirect("/error")
                 return;
