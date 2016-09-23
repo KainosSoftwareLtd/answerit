@@ -45,6 +45,9 @@
 .answer {
     /*background-color: #e6e6e6;*/
 }
+.answer-col:target{
+    background-color: #f3fff5;
+}
 
 .an-answer {
     white-space: pre-line;

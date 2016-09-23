@@ -38,13 +38,14 @@
 </div>
 {{#each answers}}
     <div class="row">
-        <div class="small-8 columns">
+        <div class="small-8 columns answer-col" id="answer{{this.id}}">
             <div class="answer">
                 <small>
                     {{# if this.displayname}}
                         <a href="mailto:{{this.email}}">{{this.displayname}}</a> asked on
                     {{/if}}
-                    {{dateFormat this.created "dddd, MMMM Do YYYY"}}
+                    {{dateFormat this.created "dddd, MMMM Do YYYY"}},
+                    <a href="#answer{{this.id}}">answer #{{this.id}}</a>
                 </small>
                 <P class="an-answer">{{this.text}}</P>
             </div>
