@@ -5,7 +5,10 @@
 
         {{#each answers}}
             <div class="answer">
-                <p class="an-answer">[Match: {{this.rank}} points] :<a href="/question/show/{{this.ques_id}}#answer{{this.ans_id}}"> {{this.ques_text}}</a>, Answer #{{this.ans_id}}</p>
+                    [Match: {{this.rank}} points] :<a href="/question/show/{{this.ques_id}}#answer{{this.ans_id}}"> {{this.ques_text}}</a>
+                    {{#if this.ans_id}}
+                        Answer #{{this.ans_id}}
+                    {{/if}}
             </div>
         {{else}}
             <br>

@@ -51,6 +51,7 @@
 
 .an-answer {
     white-space: pre-line;
+    text-align: justify;
 }
 
 i {

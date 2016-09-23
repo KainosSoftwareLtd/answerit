@@ -65,8 +65,24 @@ Question.getAll = function (done) {
  * @param done
  */
 Question.search = function (terms, done) {
-    var sql = "SELECT id,text from question where ti @@ to_tsquery($1)";
-
+    var sql = `
+    WITH document AS (
+        SELECT q.id AS ques_id, 
+            q.text AS ques_text, 
+            to_tsvector('english', q.text) || 
+            to_tsvector(COALESCE(u.displayname, '')) AS question_search_results
+            FROM question q
+            LEFT OUTER JOIN users u ON u.id = q.userid
+    ),
+    ranked_results AS (
+        SELECT ques_id, ques_text, document, 
+            ts_rank(document.question_search_results, to_tsquery('english', $1))*100 AS rank 
+            FROM document 
+            ORDER BY rank DESC
+    )
+    SELECT ques_id, ques_text, round(rank::numeric, 2) as rank FROM ranked_results
+    WHERE ranked_results.rank>0;
+    `
     var params = [terms];
     dbhelper.query(sql, params,
         function (results) {
