@@ -84,13 +84,29 @@ Question.search = function (terms, done) {
  * @param done
  */
 Question.fullQASearch = function (terms, done) {
-    var sql = "select  q.id, q.text as question, count(a.id) as answer " +
-                "from answer a " +
-                "inner join question_answer_link qal on qal.answer_id=a.id " +
-                "inner join question q on qal.question_id=q.id " +
-                "where a.ti @@ to_tsquery($1) or q.ti @@ to_tsquery($1) " +
-                "group by q.id, q.text " +
-                "order by answer desc";
+    var sql = `
+    WITH document AS (
+        -- answer_search_results column uses question text + answer text + name of the author 
+        SELECT q.id AS ques_id, 
+            a.id AS ans_id, 
+            q.text AS ques_text,
+            to_tsvector('english', q.text) || 
+            to_tsvector('english', a.text) || 
+            to_tsvector(COALESCE(u.displayname, '')) AS answer_search_results
+            FROM answer a
+            INNER JOIN question_answer_link qal ON qal.answer_id=a.id 
+            INNER JOIN question q ON qal.question_id=q.id 
+            LEFT OUTER JOIN users u ON u.id = a.userid
+        ),
+        ranked_results AS (
+            SELECT ans_id, ques_id, ques_text, document, 
+                ts_rank(document.answer_search_results, to_tsquery('english', $1))*100 AS rank 
+                FROM document 
+                ORDER BY rank DESC
+        )
+    SELECT ans_id, ques_id, ques_text, round(rank::numeric, 2) AS rank
+    FROM ranked_results
+    WHERE ranked_results.rank>0;`;
 
     var params = [terms];
     dbhelper.query(sql, params,
