@@ -39,12 +39,10 @@ router.post('/search', security.isAuthenticated, function (req, res, next) {
 
 });
 
-router.get('/login',
-    passport.authenticate('azuread-openidconnect', { failureRedirect: '/' }),
-        function (req, res) {
-        res.redirect('/');
-    }
-);
+/* Display login page */
+router.get('/login', function(req, res, next){
+    res.render('login', {layout: 'unauthenticated'});
+});
 
 /* Accept login request */
 router.post('/auth/openid/return',
@@ -57,9 +55,8 @@ router.post('/auth/openid/return',
 /* Logout */
 router.get('/logout', function (req, res) {
     req.session.destroy(function(err) {
-        var postLogoutRedirectUri = req.protocol + "://" + req.get('host');
         req.logOut();
-        res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri='+postLogoutRedirectUri);
+        res.redirect('/login');
     });
 });
 
