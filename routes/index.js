@@ -31,12 +31,19 @@ router.post('/search', security.isAuthenticated, function (req, res, next) {
 
     var keywords = sanitizer(req.body.keywords);
 
-    var searchBy = keywords.replaceAll(" ", " | ");
+    // :* is for partial matches like proj:* = project
+    var searchBy = keywords.replaceAll(" ", ":* | ");
+    searchBy += ":*";
 
-    question.fullQASearch(searchBy, function (answers) {
-        res.render('search-results', {answers: answers});
-    });
-
+    if(sanitizer(req.body.questionsOnly) == 'on'){
+        question.search(searchBy, function(answers){
+            res.render('search-results', {answers: answers});
+        });
+    } else {
+        question.fullQASearch(searchBy, function (answers) {
+            res.render('search-results', {answers: answers});
+        });
+    }
 });
 
 router.get('/login',
