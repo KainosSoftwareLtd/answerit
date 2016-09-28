@@ -27,6 +27,51 @@ Answer.add = function (answer, userId, done) {
 };
 
 /**
+ * Update an answer
+ * 
+ * @param {string} text - Text to update
+ * @param {integer} answerId - ID of the answer to update 
+ * @param done Function - to call when complete
+ */
+Answer.update = function (text, answerId, done) {
+    var sql = `UPDATE answer
+        SET text=$1 , ti=to_tsvector('english',$1)         
+        WHERE id=$2`;
+
+    var params = [text, answerId];
+
+    dbhelper.insert(sql, params,
+        function (result) {
+            done(true);
+        },
+        function (error) {
+            console.log(error);
+            done(null, error);
+        });
+};
+
+/**
+ * Get an answer using its ID
+ * the results also contain question_id of the corresponding question
+ * @param {integer} id Identifier of the answer
+ * @param done Callback function
+ */
+Answer.getById = function (id, done){
+    var sql = `SELECT a.*, qal.question_id FROM answer AS a         
+        JOIN question_answer_link qal ON qal.answer_id=a.id
+        WHERE a.id=$1`;
+    var params = [id];
+
+    dbhelper.query(sql, params,
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.error(error);
+            done(null);
+        });
+}
+/**
  * Get a question using its ID
  * @param id ID of the question
  * @param done Function to call with the results
