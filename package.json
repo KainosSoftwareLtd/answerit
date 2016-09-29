@@ -28,6 +28,7 @@
     "express-session": "latest",
     "handlebars-dateformat": "latest",
     "helmet": "^2.1.2",
+    "moment": "^2.15.1",
     "morgan": "~1.7.0",
     "passport": "latest",
     "passport-azure-ad": "latest",

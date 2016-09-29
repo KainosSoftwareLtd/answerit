@@ -4,6 +4,7 @@ var express = require('express');
 var security = require('../utils/security');
 var passport = require('passport');
 var sanitizer = require('sanitize-html');
+var moment = require('moment');
 
 var router = express.Router();
 
@@ -13,7 +14,17 @@ var qalink = require('../dao/question_answer_link');
 
 /* List questions */
 router.get('/list', security.isAuthenticated, function (req, res, next) {
-    question.getAll(function (results) {
+    question.getAllByAlphabet(function (results) {
+        res.render('list-questions', {questions: results});
+    })
+});
+
+/* List questions, sort by latest answer date */
+router.get('/list/answeredRecently', security.isAuthenticated, function (req, res, next) {
+    question.getAllByLatestAnswerTime(function (results) {
+        results.forEach(function(question) {
+            question.latest_answer_date = moment(question.latest_answer_date).fromNow();
+        });
         res.render('list-questions', {questions: results});
     })
 });

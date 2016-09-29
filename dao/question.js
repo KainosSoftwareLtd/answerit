@@ -60,6 +60,45 @@ Question.getAll = function (done) {
 }
 
 /**
+ * Get all the questions sorted alphabetically (ignoring the letter case)
+ */
+Question.getAllByAlphabet = function (done) {
+    var sql = `
+        SELECT * FROM question
+        ORDER by LOWER(text) ASC`;
+        
+    dbhelper.query(sql, null,
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.error(error);
+            done(null);
+    });
+}
+/**
+ * Get all the questions sorted by the time of the last answer (descending)
+ * @param done function to call with the results
+ */
+Question.getAllByLatestAnswerTime = function (done) {
+    var sql = `
+        SELECT q.*, MAX(a.created) AS latest_answer_date FROM answer a
+        INNER JOIN question_answer_link qal ON qal.answer_id=a.id 
+        INNER JOIN question q ON qal.question_id=q.id 
+        GROUP BY q.id
+        ORDER BY latest_answer_date DESC`;
+        
+    dbhelper.query(sql, null,
+        function (results) {
+            done(results);
+        },
+        function (error) {
+            console.error(error);
+            done(null);
+    });
+};
+
+/**
  * Perform a full text search using the supplied terms
  * @param terms
  * @param done

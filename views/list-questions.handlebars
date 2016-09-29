@@ -1,13 +1,35 @@
 <div class="row">
     <div class="large-8 medium-8 columns">
 
-        <h5>Questions</h5>
+        <h5>Questions ordered:
+            <select id="questionsOrder" onchange="location = this.value;">
+              <option value="/question/list">alphabetically</option>
+              <option value="/question/list/answeredRecently">by most recent answers</option>
+            </select>
+        </h5>
         <ul>
         {{#each questions}}
-            <li><a href="/question/show/{{this.id}}">{{this.text}}</a></li>
+            <li>
+                <a href="/question/show/{{this.id}}">{{this.text}}</a>
+                {{# if this.latest_answer_date}}
+                    <small>
+                        Answered {{this.latest_answer_date}}
+                    </small>
+                {{/if}}
+            </li>
         {{/each}}
         </ul>
 
     </div>
 </div>
 
+{{#section 'footer'}}
+    <script type="text/javascript"" defer="defer">
+        //select the "Questions ordered" dropdown option corresponding to the current page
+        $("#questionsOrder").find("option").each(function(index, option){
+            if(option.value == window.location.pathname){
+                option.selected = true;
+            }
+        });
+    </script>
+{{/section}}
