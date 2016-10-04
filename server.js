@@ -96,7 +96,16 @@ var AnswerIt = function () {
         self.app.engine('handlebars',
             exphbs({
                 helpers: {
-                    dateFormat: hdf
+                    dateFormat: hdf,
+                    /**
+                     * Allows to add new sections to the layout 
+                     * e.g. {{{_sections.footer}}} allows to put custom <scripts> into chosen views
+                     */
+                    section: function(name, options){
+                        if(!this._sections) this._sections = {};
+                        this._sections[name] = options.fn(this);
+                        return null;
+                    }
                 },
                 defaultLayout: 'main'
             }));
