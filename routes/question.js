@@ -24,7 +24,7 @@ router.get('/show/:questionId', security.isAuthenticated, function (req, res, ne
 
     question.getById(questionId, function (question) {
         answer.getForQuestionId(questionId, function (answers) {
-            res.render('show-question', {question: question, answers: answers, test: "frank"});
+            res.render('show-question', {question: question, answers: answers});
         })
 
     })
