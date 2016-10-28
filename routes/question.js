@@ -11,6 +11,7 @@ var router = express.Router();
 var question = require('../dao/question');
 var answer = require('../dao/answer');
 var qalink = require('../dao/question_answer_link');
+var answersHelper = require('../utils/answersHelper');
 
 /* List questions */
 router.get('/list', security.isAuthenticated, function (req, res, next) {
@@ -35,9 +36,9 @@ router.get('/show/:questionId', security.isAuthenticated, function (req, res, ne
 
     question.getById(questionId, function (question) {
         answer.getForQuestionId(questionId, function (answers) {
+            answers = answersHelper.attachIsEditableFlags(req.user, answers);
             res.render('show-question', {question: question, answers: answers});
         })
-
     })
 });
 

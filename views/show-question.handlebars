@@ -62,9 +62,11 @@
                     {{/if}}
                 </div>
                 <div class="large-6 medium-6 columns">
-                    <form name="editAnswer" method="get" action="/answer/edit/{{this.id}}">
-                        <button class="button small" type="submit">Edit answer</button>
-                    </form>
+                    {{# if this.isEditable }}
+                        <form name="editAnswer" method="get" action="/answer/edit/{{this.id}}">
+                            <button class="button small" type="submit">Edit answer</button>
+                        </form>
+                    {{/if}}
                 </div>
             </div>
         </div>
