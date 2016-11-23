@@ -10,6 +10,7 @@ var router = express.Router();
 var question = require('../dao/question');
 var answer = require('../dao/answer');
 var qalink = require('../dao/question_answer_link');
+var answersHelper = require('../utils/answersHelper');
 
 
 /* Add another answer to an existing question */
@@ -36,7 +37,7 @@ router.post('/add', security.canEdit, function (req, res, next) {
 router.get('/edit/:answerId', security.canEdit, function (req, res, next) {
     var answerId = sanitizer(req.params.answerId);
     answer.getById(answerId, function (thisAnswer) {
-        if (!failWhenUserNotPermittedToEdit(req, next, thisAnswer[0].userid)){
+        if (!failWhenUserNotPermittedToEdit(thisAnswer[0], req.user, next)) {
             question.getById(thisAnswer.question_id, function(thisQuestion){
                 res.render('update-answer', {answer: thisAnswer[0], question: thisQuestion});
             });
@@ -57,7 +58,7 @@ router.post('/edit/:answerId', security.canEdit, function (req, res, next) {
             return;
         }     
         var answerFromDB = results[0];
-        if(!failWhenUserNotPermittedToEdit(req, next, answerFromDB.userid)){
+        if(!failWhenUserNotPermittedToEdit(answerFromDB, req.user, next)) {
             answer.update(answerText, answerId, function (isSuccess, aerror) {
                 res.redirect("/question/show/" + answerFromDB.question_id + "#answer" + answerId);
                 return;
@@ -68,13 +69,14 @@ router.post('/edit/:answerId', security.canEdit, function (req, res, next) {
 
 /**
  * Throws an error (using express middleware) if user was not permitted to edit an answer
- * @param req HTTP request object
+ * @param answer Answer object returned by answer DAO
+ * @param user User object attached to the request
  * @param next Call to invoke next middleware in the stack
- * @param {integer} answerOwnerId ID of the user that created the answer
  * @returns {boolean} true if an error was thrown, false if nothing happened
  */
-function failWhenUserNotPermittedToEdit(req, next, answerOwnerId){
-    if(!req.user.admin && answerOwnerId != req.user.id){
+function failWhenUserNotPermittedToEdit(answer, user, next) {
+    answer = answersHelper.attachIsEditableFlag(user, answer);
+    if(!answer.isEditable) {
         var error = new Error("Only admins can edit answers that don't belong to them.");
         error.status = 403;
         next(error);
