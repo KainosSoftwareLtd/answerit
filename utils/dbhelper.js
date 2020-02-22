@@ -50,7 +50,7 @@ DBHelper.query = function (sql, parameters, done, error) {
         });
 
     });
-}
+};
 
 /**
  * Perform an insert operation on the database

@@ -1,6 +1,6 @@
   exports.creds = {
     // This is your app's 'REPLY URL' in AAD
-    returnURL: process.env.AZURE_RETURN_URL || 'http://localhost:8090/auth/openid/return',
+    returnURL: process.env.AZURE_RETURN_URL || 'https://localhost:8090/auth/openid/return',
 
     realm: process.env.AZURE_REALM,
     

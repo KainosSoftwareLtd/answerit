@@ -10,8 +10,8 @@ const users = require('../dao/users.js');
 const config = require('./config');
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 
-var strategyConfig = {
-    callbackURL: config.creds.returnURL,
+let strategyConfig = {
+    redirectUrl: config.creds.returnURL,
     realm: config.creds.realm,
     clientID: config.creds.clientID,
     clientSecret: config.creds.clientSecret,

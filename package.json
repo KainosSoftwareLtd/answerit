@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./server.js"
+    "start": "node ./server.js",
+    "migrate-up": "db-migrate up",
+    "migrate-down": "db-migrate down"
   },
   "devDependencies": {
     "async": "^2.0.1"
@@ -11,29 +13,29 @@
   "bundleDependencies": [],
   "main": "server.js",
   "engines": {
-    "node": "4.4.6",
-    "npm": "2.15.5"
+    "node": "12.10.0",
+    "npm": "6.10.3"
   },
   "dependencies": {
-    "body-parser": "~1.15.1",
+    "body-parser": "latest",
     "bunyan": "^1.8.1",
     "connect-flash": "0.1.1",
-    "db-migrate": "0.10.0-beta.12",
+    "db-migrate": "^0.11.6",
     "db-migrate-pg": "latest",
     "debug": "~2.2.0",
-    "dotenv": "1.2.0",
+    "dotenv": "latest",
     "express": "latest",
-    "express-enforces-ssl": "^1.1.0",
+    "express-enforces-ssl": "latest",
     "express-handlebars": "latest",
     "express-session": "latest",
     "handlebars-dateformat": "latest",
     "helmet": "^2.1.2",
     "moment": "^2.15.1",
     "morgan": "~1.7.0",
-    "passport": "latest",
-    "passport-azure-ad": "latest",
+    "passport": "0.3.2",
+    "passport-azure-ad": "^4.2.1",
     "passport-local": "latest",
-    "pg": "4.1.1",
+    "pg": "7.18.1",
     "sanitize-html": "latest",
     "serve-favicon": "~2.3.0"
   }
