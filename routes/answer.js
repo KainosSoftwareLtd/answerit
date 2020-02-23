@@ -53,7 +53,6 @@ router.get('/edit/:answerId', security.canEdit, function (req, res, next) {
 router.post('/edit/:answerId', security.canEdit, function (req, res, next) {
 
     const answerText = sanitizer(req.body.answer);
-    const userId = req.user.id;
     const answerId = sanitizer(req.params.answerId);
 
     answer.getById(answerId)

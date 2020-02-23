@@ -78,10 +78,8 @@ router.post('/deleteanswer', security.canEdit, function (req, res, next) {
 router.post('/delete', security.canEdit, function (req, res, next) {
     const questionId = sanitizer(req.body.question);
 
-    console.log("** deleting question :" + questionId);
     question.delete(questionId)
         .then(result => {
-            console.log(result);
             res.redirect('/')
         })
         .catch(error => handleQuestionError(res,error));
@@ -89,13 +87,14 @@ router.post('/delete', security.canEdit, function (req, res, next) {
 
 /* Add a question */
 router.post('/add', security.canEdit, function (req, res, next) {
-
     const questionText = sanitizer(req.body.question);
     const answerText = sanitizer(req.body.answer);
     const userId = req.user.id;
 
+    let theQuestionId;
     question.add(questionText, userId)
         .then(questionId => {
+            theQuestionId=questionId;
             if (null === questionId) {
                 res.redirect("/error")
             } else {
@@ -105,7 +104,7 @@ router.post('/add', security.canEdit, function (req, res, next) {
                             res.redirect("/error")
                         } else {
                             qaLink.add(questionId, answerId)
-                                .then(linkId=>res.redirect("/question/show/" + questionId))
+                                .then(linkId=>res.redirect("/question/show/" + theQuestionId))
                                 .catch(error=>res.redirect('/error'));
                         }
                     })
