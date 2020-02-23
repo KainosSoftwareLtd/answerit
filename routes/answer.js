@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('./winstonLogger')(module);
 
 const express = require('express');
 const security = require('../utils/security');
@@ -27,7 +28,7 @@ router.post('/add', security.canEdit, function (req, res, next) {
             } else {
                 qaLink.add(questionId, answerId)
                     .then(linkId => res.redirect("/question/show/" + questionId))
-                    .catch(error => res.redirect('/error'));
+                    .catch(error => handleAnswerError(res, error));
             }
         });
 });
@@ -42,10 +43,10 @@ router.get('/edit/:answerId', security.canEdit, function (req, res, next) {
                     .then(thisQuestion => {
                         res.render('update-answer', {answer: thisAnswer[0], question: thisQuestion});
                     })
-                    .catch(error => res.redirect('/error'));
+                    .catch(error => handleAnswerError(res, error));
             }
         })
-        .catch(error => res.redirect('/error'));
+        .catch(error => handleAnswerError(res, error));
 });
 
 /* Update an answer if its owner requested it */
@@ -64,7 +65,7 @@ router.post('/edit/:answerId', security.canEdit, function (req, res, next) {
                 if (!failWhenUserNotPermittedToEdit(answerFromDB, req.user, next)) {
                     answer.update(answerText, answerId)
                         .then(isSuccess => res.redirect("/question/show/" + answerFromDB.question_id + "#answer" + answerId))
-                        .catch(error => res.redirect('/error'));
+                        .catch(error => handleAnswerError(res, error));
                 }
             }
         });
@@ -86,6 +87,11 @@ function failWhenUserNotPermittedToEdit(answer, user, next) {
         return true;
     }
     return false;
+}
+
+function handleAnswerError(res,error){
+    logger.info(error);
+    res.redirect('/error');
 }
 
 module.exports = router;
