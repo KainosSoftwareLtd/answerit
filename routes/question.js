@@ -17,9 +17,7 @@ const answersHelper = require('../utils/answersHelper');
 router.get('/list', security.isAuthenticated, function (req, res, next) {
     question.getAllByAlphabet()
         .then(results => res.render('list-questions', {questions: results}))
-        .catch(errors => {
-
-        });
+        .catch(error =>res.redirect('/error'));
 });
 
 /* List questions, sort by latest answer date */
@@ -31,9 +29,7 @@ router.get('/list/answeredRecently', security.isAuthenticated, function (req, re
             });
             res.render('list-questions', {questions: results});
         })
-        .catch(errors => {
-
-        });
+        .catch(error =>res.redirect('/error'));
 });
 
 /* List questions */
@@ -48,9 +44,7 @@ router.get('/show/:questionId', security.isAuthenticated, function (req, res, ne
             answers = answersHelper.attachIsEditableFlags(req.user, answers);
             res.render('show-question', {question: question, answers: answers});
         })
-        .catch(errors => {
-
-        });
+        .catch(error =>res.redirect('/error'));
 });
 
 /* Add a question */
@@ -63,9 +57,7 @@ router.get('/addanswer/:questionId', security.canEdit, function (req, res, next)
     const questionId = sanitizer(req.params.questionId);
     question.getById(questionId)
         .then(question => res.render('add-second-answer', {question: question}))
-        .catch(error => {
-
-        });
+        .catch(error =>res.redirect('/error'));
 });
 
 
@@ -76,9 +68,7 @@ router.post('/deleteanswer', security.canEdit, function (req, res, next) {
 
     answer.delete(answerId)
         .then(result => res.redirect('/question/show/' + questionId))
-        .catch(error => {
-
-        });
+        .catch(error =>res.redirect('/error'));
 });
 
 /* Delete a question */
@@ -87,9 +77,7 @@ router.post('/delete', security.canEdit, function (req, res, next) {
 
     question.delete(questionId)
         .then(result => res.redirect('/'))
-        .catch(error => {
-
-        });
+        .catch(error =>res.redirect('/error'));
 });
 
 /* Add a question */
@@ -109,9 +97,9 @@ router.post('/add', security.canEdit, function (req, res, next) {
                         if (null == answerId) {
                             res.redirect("/error")
                         } else {
-                            qalink.add(questionId, answerId, function (linkId, lerror) {
-                                res.redirect("/question/show/" + questionId)
-                            })
+                            qalink.add(questionId, answerId)
+                                .then(linkId=>res.redirect("/question/show/" + questionId))
+                                .catch(error=>res.redirect('/error'));
                         }
                     })
                     .catch(error => res.redirect("/error"));
