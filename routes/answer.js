@@ -1,5 +1,5 @@
 'use strict';
-const logger = require('./winstonLogger')(module);
+const logger = require('../winstonLogger')(module);
 
 const express = require('express');
 const security = require('../utils/security');

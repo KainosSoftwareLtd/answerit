@@ -25,6 +25,11 @@ router.get('/search', security.isAuthenticated, function (req, res, next) {
     res.render('search');
 });
 
+/* Basic error page */
+router.get('/error', security.isAuthenticated, function(req,res,next) {
+    res.render('error')
+});
+
 /* POST Perform Search */
 router.post('/search', security.isAuthenticated, function (req, res, next) {
 
