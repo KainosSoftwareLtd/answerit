@@ -11,7 +11,7 @@ const router = express.Router();
 
 const question = require('../dao/question');
 const answer = require('../dao/answer');
-const qalink = require('../dao/question_answer_link');
+const qaLink = require('../dao/question_answer_link');
 const answersHelper = require('../utils/answersHelper');
 
 /* List questions */
@@ -76,8 +76,12 @@ router.post('/deleteanswer', security.canEdit, function (req, res, next) {
 router.post('/delete', security.canEdit, function (req, res, next) {
     const questionId = sanitizer(req.body.question);
 
+    console.log("deleting question ${questionId}");
     question.delete(questionId)
-        .then(result => res.redirect('/'))
+        .then(result => {
+            console.log(result);
+            res.redirect('/')
+        })
         .catch(error => handleQuestionError(res,error));
 });
 
@@ -98,7 +102,7 @@ router.post('/add', security.canEdit, function (req, res, next) {
                         if (null == answerId) {
                             res.redirect("/error")
                         } else {
-                            qalink.add(questionId, answerId)
+                            qaLink.add(questionId, answerId)
                                 .then(linkId=>res.redirect("/question/show/" + questionId))
                                 .catch(error=>res.redirect('/error'));
                         }

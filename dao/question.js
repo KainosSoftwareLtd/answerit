@@ -136,8 +136,6 @@ Question.fullQASearch = function (terms) {
  * @param questionId
  */
 Question.delete = function( questionId) {
-    const sql = `DELETE FROM question WHERE id = $1`;
-
     return database.deleteByIds('question', [questionId]);
 };
 
