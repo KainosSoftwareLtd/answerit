@@ -37,13 +37,15 @@ router.get('/list/answeredRecently', security.isAuthenticated, function (req, re
 router.get('/show/:questionId', security.isAuthenticated, function (req, res, next) {
     const questionId = sanitizer(req.params.questionId);
 
+    let theQuestion;
     question.getById(questionId)
         .then(question => {
+            theQuestion = question;
             return answer.getForQuestionId((questionId));
         })
         .then(answers => {
             answers = answersHelper.attachIsEditableFlags(req.user, answers);
-            res.render('show-question', {question: question, answers: answers});
+            res.render('show-question', {question: theQuestion, answers: answers});
         })
         .catch(error => handleQuestionError(res,error));
 });
