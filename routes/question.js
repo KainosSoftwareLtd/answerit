@@ -76,7 +76,7 @@ router.post('/deleteanswer', security.canEdit, function (req, res, next) {
 router.post('/delete', security.canEdit, function (req, res, next) {
     const questionId = sanitizer(req.body.question);
 
-    console.log("deleting question ${questionId}");
+    console.log("** deleting question :" + questionId);
     question.delete(questionId)
         .then(result => {
             console.log(result);
