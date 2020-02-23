@@ -17,26 +17,28 @@
     "npm": "6.10.3"
   },
   "dependencies": {
+    "app-root-path": "latest",
     "body-parser": "latest",
     "bunyan": "^1.8.1",
     "connect-flash": "0.1.1",
+    "console-stamp": "latest",
     "db-migrate": "^0.11.6",
     "db-migrate-pg": "latest",
-    "debug": "~2.2.0",
+    "debug": "^4.1.1",
     "dotenv": "latest",
     "express": "latest",
     "express-enforces-ssl": "latest",
     "express-handlebars": "latest",
     "express-session": "latest",
     "handlebars-dateformat": "latest",
-    "helmet": "^2.1.2",
+    "helmet": "^3.21.2",
     "moment": "^2.15.1",
-    "morgan": "~1.7.0",
     "passport": "0.3.2",
     "passport-azure-ad": "^4.2.1",
     "passport-local": "latest",
     "pg": "7.18.1",
     "sanitize-html": "latest",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "^2.5.0",
+    "winston": "^3.2.1"
   }
 }

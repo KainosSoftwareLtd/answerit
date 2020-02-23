@@ -1,28 +1,21 @@
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
+'use strict';
 
-var QALink = function () {
+const database = require('../utils/dbConnection');
+
+
+const QALink = function () {
 };
 
 /**
  * Add a new question->Answer link
- * @param QuestionId
+ * @param questionId
  * @param AnswerId
- * @param done Function to call when complete
  */
-QALink.add = function (questionId, AnswerId, done) {
+QALink.add = function (questionId, AnswerId) {
 
-    var sql = "INSERT INTO question_answer_link( question_id, answer_id ) values ( $1, $2 ) returning id";
-    var params = [questionId, AnswerId];
+    const sql = `INSERT INTO question_answer_link( question_id, answer_id ) values ( $1, $2 ) returning id`;
 
-    dbhelper.insert(sql, params,
-        function (result) {
-            done(result.rows[0].id, null);
-        },
-        function (error) {
-            console.log(error);
-            done(null, error);
-        });
+    return database.insertOrUpdate(sql, [questionId, AnswerId]);
 };
 
 

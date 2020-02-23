@@ -1,101 +1,73 @@
 'use strict';
 
-var pg = require('pg');
-var dbhelper = require('../utils/dbhelper.js');
+const database = require('../utils/dbConnection');
 
-var Question = function () {
+const Question = function () {
 };
 
 /**
  * Add a new question
- * @param Question text to add
- * @param done Function to call when complete
+ * @param question
+ * @param userId
  */
-Question.add = function (question, userId, done) {
+Question.add = function (question, userId) {
 
-    var sql = "INSERT INTO question (text, userid, ti) values ( $1 , $2, to_tsvector('english',$1)) returning id";
-    var params = [question, userId];
+    const sql = `INSERT INTO question (text, userid, ti) values ( $1 , $2, to_tsvector('english',$1)) returning id`;
+    const params = [question, userId];
 
-    dbhelper.insert(sql, params,
-        function (result) {
-            done(result.rows[0].id, null);
-        },
-        function (error) {
-            console.log(error);
-            done(null, error);
+    return database.insertOrUpdate(sql,params)
+        .then(result=>{
+            return result.rows[0].id;
         });
 };
 
 /**
  * Get a question using its ID
  * @param id ID of the question
- * @param done Function to call with the results
  */
-Question.getById = function (id, done) {
-    var sql = "SELECT q.*, u.displayname, u.email from question q " + 
-        "LEFT OUTER JOIN users u on u.id=q.userid " +
-        "WHERE q.id=$1";
+Question.getById = function (id) {
+    const sql = `SELECT q.*, u.displayname, u.email from question q 
+        LEFT OUTER JOIN users u on u.id=q.userid
+        WHERE q.id=$1`;
 
-    var params = [id];
-    dbhelper.query(sql, params,
-        function (results) {
-            if (results.length != 1) {
-                done(null);
+    return database.query(sql,[id])
+        .then(results=>{
+            if (results.length !== 1) {
+                return null;
             } else {
-                done(results[0]);
+                return results[0];
             }
-        },
-        function (error) {
-            console.error(error);
-            done(null);
         });
-}
+};
 
 /**
  * Get all the questions
- * @param done function to call with the results
  */
-Question.getAll = function (done) {
-    dbhelper.getAllFromTable("question", done);
-}
+Question.getAll = function () {
+    return database.getAllFromTable('question');
+};
 
 /**
  * Get all the questions sorted alphabetically (ignoring the letter case)
  */
-Question.getAllByAlphabet = function (done) {
-    var sql = `
-        SELECT * FROM question
-        ORDER by LOWER(text) ASC`;
-        
-    dbhelper.query(sql, null,
-        function (results) {
-            done(results);
-        },
-        function (error) {
-            console.error(error);
-            done(null);
-    });
-}
+Question.getAllByAlphabet = function () {
+    const sql = `SELECT * FROM question ORDER by LOWER(text) ASC`;
+
+    return database.query( sql, null);
+};
+
 /**
  * Get all the questions sorted by the time of the last answer (descending)
- * @param done function to call with the results
  */
-Question.getAllByLatestAnswerTime = function (done) {
-    var sql = `
+Question.getAllByLatestAnswerTime = function () {
+    const sql = `
         SELECT q.*, MAX(a.created) AS latest_answer_date FROM answer a
         INNER JOIN question_answer_link qal ON qal.answer_id=a.id 
         INNER JOIN question q ON qal.question_id=q.id 
         GROUP BY q.id
         ORDER BY latest_answer_date DESC`;
-        
-    dbhelper.query(sql, null,
-        function (results) {
-            done(results);
-        },
-        function (error) {
-            console.error(error);
-            done(null);
-    });
+
+    return database.query( sql, null);
 };
 
 /**
@@ -104,7 +76,7 @@ Question.getAllByLatestAnswerTime = function (done) {
  * @param done
  */
 Question.search = function (terms, done) {
-    var sql = `
+    const sql = `
     WITH document AS (
         SELECT q.id AS ques_id, 
             q.text AS ques_text, 
@@ -121,25 +93,18 @@ Question.search = function (terms, done) {
     )
     SELECT ques_id, ques_text, round(rank::numeric, 2) as rank FROM ranked_results
     WHERE ranked_results.rank>0;
-    `
-    var params = [terms];
-    dbhelper.query(sql, params,
-        function (results) {
-            done(results);
-        },
-        function (error) {
-            console.error(error);
-            done(null);
-        });
-}
+    `;
+
+
+    return database.query(sql, [terms]);
+};
 
 /**
  * Perform a full text search using the supplied terms
  * @param terms
- * @param done
  */
-Question.fullQASearch = function (terms, done) {
-    var sql = `
+Question.fullQASearch = function (terms) {
+    const sql = `
     WITH document AS (
         -- answer_search_results column uses question text + answer text + name of the author 
         SELECT q.id AS ques_id, 
@@ -163,35 +128,17 @@ Question.fullQASearch = function (terms, done) {
     FROM ranked_results
     WHERE ranked_results.rank>0;`;
 
-    var params = [terms];
-    dbhelper.query(sql, params,
-        function (results) {
-            done(results);
-        },
-        function (error) {
-            console.error(error);
-            done(null);
-        });
-}
+    return database.query(sql,[terms]);
+};
 
 /**
  * Delete a question
- * @param answerId
- * @param done
+ * @param questionId
  */
-Question.delete = function( questionId, done) {
-    var params = [questionId];
+Question.delete = function( questionId) {
+    const sql = `DELETE FROM question WHERE id = $1`;
 
-    var sql = "DELETE FROM question WHERE id = $1";
-
-    dbhelper.query(sql, params,
-        function (result) {
-            done(true);
-        },
-        function (error) {
-            console.error(error);
-            done(false, error);
-        });
-}
+    return database.deleteByIds('question', [questionId]);
+};
 
 module.exports = Question;

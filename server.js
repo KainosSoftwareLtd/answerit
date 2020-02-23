@@ -5,42 +5,49 @@
 /**
  * answerIt app
  */
+
+// Setup the console logging format
+require('console-stamp')(console, '[ddd mmm dd HH:MM:ss]]');
+
 // Load in the environment variables
 require('dotenv').config({path: 'process.env'});
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var exphbs = require('express-handlebars');
-var hdf = require('handlebars-dateformat');
-var flash = require('connect-flash');
-var helmet = require('helmet');
-var express_enforces_ssl = require('express-enforces-ssl');
+// Setup the console logging format
+const logger = require('./winstonLogger')(module);
+
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const exphbs = require('express-handlebars');
+const hdf = require('handlebars-dateformat');
+const flash = require('connect-flash');
+const helmet = require('helmet');
+const express_enforces_ssl = require('express-enforces-ssl');
 
 // This is used for building the search terms
 String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
+    const target = this;
     return target.split(search).join(replacement);
 };
 
 // Authentications
-var users = require('./dao/users');
-var passport = require('passport');
+const passport = require('passport');
 require('./utils/passport.js');
 
+// DAO
+const usersDao = require('./dao/users');
+
 // Routes
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var question = require('./routes/question');
-var answer = require('./routes/answer');
+const routes = require('./routes/index');
+const users = require('./routes/users');
+const question = require('./routes/question');
+const answer = require('./routes/answer');
 
-var AnswerIt = function () {
-
-    // Scope
-    var self = this;
+const AnswerIt = function () {
+    const self = this;
 
     /**
      *  Set up server IP address and port # using env variables/defaults.
@@ -57,11 +64,11 @@ var AnswerIt = function () {
      */
     self.terminator = function (sig) {
         if (typeof sig === "string") {
-            console.log('%s: Received %s - terminating AnswerIt ...',
+            logger.info('%s: Received %s - terminating AnswerIt ...',
                 Date(Date.now()), sig);
             process.exit(1);
         }
-        console.log('%s: Node server stopped.', Date(Date.now()));
+        logger.info('%s: Node server stopped.', Date(Date.now()));
     };
 
     /**
@@ -124,28 +131,28 @@ var AnswerIt = function () {
         // Setup the Google Analytics ID if defined
         self.app.locals.google_id = process.env.GOOGLE_ID || undefined;
 
-        var cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
-        var sess = {
+        const cookie_key = process.env.COOKIE_KEY || 'aninsecurecookiekey';
+        const sess = {
             secret: cookie_key,
             cookie: {}
-        }
+        };
 
-        if (self.app.get('env')  == 'production') {
+        if (self.app.get('env')  === 'production') {
             self.app.enable('trust proxy', 1); // trusts first proxy - Heroku load balancer
-            console.log("In production mode");
+            logger.info("In production mode");
             self.app.use(express_enforces_ssl());
             sess.cookie.secure = true;
         }
 
         self.app.use(session(sess));
 
-        console.log("GA ID:" + self.app.locals.google_id);
-        console.log("Cookie key:" + cookie_key);
+        logger.info("GA ID:" + self.app.locals.google_id);
+        logger.info("Cookie key:" + cookie_key);
 
         // development error handler
         // will print stacktrace
         if (self.app.get('env') === 'development') {
-            console.log("In development mode");
+            logger.info("In development mode");
             self.app.use(function (err, req, res, next) {
                 res.status(err.status || 500);
                 res.render('error', {
@@ -179,7 +186,6 @@ var AnswerIt = function () {
 
         // uncomment after placing your favicon in /public
         self.app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-        self.app.use(logger('dev'));
 
         //
         // Setup the routes
@@ -189,16 +195,14 @@ var AnswerIt = function () {
         self.app.use('/question' , question);
         self.app.use('/answer' , answer);
 
-
-
         // catch 404 and forward to error handler
         self.app.use(function (req, res, next) {
-            var err = new Error('Not Found');
+            const err = new Error('Not Found');
             err.status = 404;
             next(err);
         });
 
-    }
+    };
 
     /**
      *  Start the server (starts up the sample application).
@@ -206,15 +210,15 @@ var AnswerIt = function () {
     self.start = function () {
         //  Start the app on the specific interface (and port).
         self.app.listen(self.port, function () {
-            console.log('%s: Node server started on %s:%d ...',
+            logger.info('AnswerIt server started on %s:%d',
                 Date(Date.now()), self.port);
         });
     };
-}
+};
 
 /**
  *  main():  Main code.
  */
-var answerApp = new AnswerIt();
+const answerApp = new AnswerIt();
 answerApp.initialize();
 answerApp.start();

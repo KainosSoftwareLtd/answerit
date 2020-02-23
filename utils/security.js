@@ -3,7 +3,7 @@
 /**
  * Security helper functions
  */
-var Security = function () {
+const Security = function () {
 };
 
 
@@ -24,7 +24,7 @@ Security.isAuthenticated = function (req, res, next) {
 
     req.session.redirect_to = req.baseUrl + req.url;
     res.redirect('/login');
-}
+};
 
 Security.canEdit = function (req, res, next) {
     // all authenticated users can edit
@@ -37,7 +37,7 @@ Security.canEdit = function (req, res, next) {
 
     req.session.redirect_to = req.url;
     res.redirect('/login');
-}
+};
 
 /**
  * Check if the users is an authenticated admin
@@ -54,7 +54,7 @@ Security.isAuthenticatedAdmin = function (req, res, next) {
 
     req.session.redirect_to = req.baseUrl + req.url;
     res.redirect('/login');
-}
+};
 
 
 module.exports = Security;
